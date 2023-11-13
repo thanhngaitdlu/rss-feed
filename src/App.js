@@ -1,24 +1,48 @@
-import logo from './logo.svg';
-import './App.css';
+import axios from "axios";
+import { useEffect, useState }  from "react";
+import ArticleList from "./ArticleList";
+
 
 function App() {
+  const [channels, setChannels] = useState([]);
+
+  console.log(channels);
+
+  const getChannels = async () => {
+    try {
+      const res = await axios.get("http://localhost:4000/channels");
+      setChannels(res.data);
+
+    } catch (error){
+      console.log(error);
+    }
+  }
+
+  useEffect (() => {
+    getChannels();
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <h1 className="text-xl font-semibold text-center mt-5">
+        RSS-Feed
+      </h1>
+      <h2 className="text-3xl font-semibold text-center mt-2 mb-4">
+        Đọc báo giáo dục
+      </h2>
+
+      <div className="grid grid-cols-4 gap-1">
+        {channels.map((item) => 
+          <ArticleList 
+            key = {item.id}
+            id = {item.id}
+            name = {item.name}
+            imageUrl = {item.imageUrl}
+          />
+        )}
+      </div>
+      
+      
+    </>
   );
 }
 
